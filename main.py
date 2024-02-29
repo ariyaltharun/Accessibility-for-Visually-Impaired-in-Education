@@ -4,6 +4,8 @@ import logging
 import pygame
 import speech_recognition as sr
 
+from Actions.RecordLectures import record_lectures
+
 
 logging.basicConfig(level=logging.NOTSET, format="[ %(levelname)s ] %(message)s")
 
@@ -64,6 +66,11 @@ def actions(user_text) -> None:
         # Give a name to the lecture
         # Store in a database
         speak("Started Recording Lectures")
+        speak("What would you name this lecture?")
+        filename = listen()
+        speak(f"{filename} name is cool")
+        filename = filename.replace(" ", "_") + ".wav"
+        record_lectures(filename)
         pass
     elif "replay lectures" in user_text:
         # TODO: replay Lectures function
