@@ -1,8 +1,10 @@
 import logging
+from time import sleep
 import speech_recognition as sr
 
 from utils import listen, speak
 from Actions.RecordLectures import record_lectures
+from Actions.Scribe import scribe
 
 
 logging.basicConfig(level=logging.NOTSET, format="[ %(levelname)s ] %(message)s")
@@ -19,9 +21,6 @@ exit: bool = False
 
 def actions(user_text) -> None:
     global exit
-    # while True:
-    # User selects the choices
-    # user_selection = user_text.value.decode()
     if not user_text:
         return
     
@@ -47,9 +46,11 @@ def actions(user_text) -> None:
         # TODO: summarize Lectures function
         speak("Started Summarizing lecture")
         pass
-    elif "minimick scribe" in user_text:
+    elif "act as scribe" in user_text:
         # TODO: scribe function
         speak("Started Acting as a scribe")
+        sleep(1)
+        scribe()
         pass
     elif "exit" in user_text:
         speak("Program exiting")

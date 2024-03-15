@@ -2,3 +2,4 @@ SpeechRecognition # For speech recognition
 PyAudio # To get input from microphone
 gTTS
 pygame
+PyPDF2
