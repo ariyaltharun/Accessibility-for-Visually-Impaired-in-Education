@@ -31,10 +31,10 @@ def record_lectures(file_name: str) -> None:
         stream.stop_stream()
         stream.close()
         p.terminate()
-        logging.info("Recording stoped")
+        logging.info("Recording stopped")
 
 
-    with wave.open(WAVE_OUTPUT_FILENAME, 'wb') as file:
+    with wave.open("RecordedLectures/"+WAVE_OUTPUT_FILENAME, 'wb') as file:
         file.setnchannels(CHANNELS)
         file.setframerate(RATE)
         file.setsampwidth(p.get_sample_size(FORMAT))
