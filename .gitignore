@@ -1,3 +1,4 @@
 env/
 Experiments/
 __pycache__/
+.env
