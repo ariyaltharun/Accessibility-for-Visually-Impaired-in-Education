@@ -3,7 +3,7 @@ from time import sleep
 import speech_recognition as sr
 
 from utils import listen, speak
-from Actions.RecordLectures import record_lectures
+from Actions.LectureManager import record_lectures, replay_lecture
 from Actions.Scribe import scribe
 
 
@@ -41,12 +41,12 @@ def actions(user_text) -> None:
         # Search a lecture based on user_query(name of lecture) in the database
         # Play the lecture
         speak("Started Replaying Lectures")
+        sleep(0.5)
+        speak("Tell the file name")
+        user_response: str = listen()
+        replay_lecture(user_response.replace(" ", "_"))
         pass
-    elif "summarize lecture" in user_text:
-        # TODO: summarize Lectures function
-        speak("Started Summarizing lecture")
-        pass
-    elif "act as scribe" in user_text:
+    elif "act as scribe" in user_text.lower():
         # TODO: scribe function
         speak("Started Acting as a scribe")
         sleep(1)
@@ -64,8 +64,9 @@ def main() -> None:
 
     while not exit:
         button_click = int(input("Enter 1 to turn mic on or 0 to turn mic off\n").strip())
-
+    
         if button_click:
+            speak("How can I help you?")
             user_text = listen()
             system_text = actions(user_text)
             speak(system_text)

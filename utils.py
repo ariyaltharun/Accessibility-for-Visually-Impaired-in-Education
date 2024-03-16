@@ -3,6 +3,7 @@ import speech_recognition as sr
 import pygame
 from gtts import gTTS
 from io import BytesIO
+from pymongo import MongoClient
 
 
 recognizer = sr.Recognizer()
@@ -39,3 +40,43 @@ def speak(system_text) -> None:
 
         while pygame.mixer.music.get_busy():
             pygame.time.Clock().tick()
+
+
+################################## MongoDB Utilites #########################################
+def store(mongo_url: str, collection_name: str, data: dict) -> None:
+    """Stores the data in specificed mongodb collection
+    
+    Args:
+    -----
+    mongo_url: connection url for mongodb (str)
+    collection_name: (str)
+    data: (dict)
+
+    Output:
+    -------
+    None
+    """
+    try:
+        client = MongoClient(mongo_url)
+        db = client['unisys-project']
+        db[collection_name].insert_one(data)
+        logging.info("Successfully Stored")
+    except Exception as e:
+        logging.error(f"Error: {e}")
+    finally:
+        client.close()
+        logging.info("Database Connection closed!!")
+
+
+def load(mongo_url: str, collection_name: str, data: dict) -> dict:
+    try:
+        client = MongoClient(mongo_url)
+        db = client['unisys-project']
+        req_data = db[collection_name].find_one(data)
+        logging.info("Successfully retrived")
+    except Exception as e:
+        logging.error(f"Error: {e}")
+    finally:
+        client.close()
+        logging.info("Database Connection closed!!")
+    return req_data
