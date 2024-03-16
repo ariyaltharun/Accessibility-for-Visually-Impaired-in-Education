@@ -3,3 +3,5 @@ PyAudio # To get input from microphone
 gTTS
 pygame
 PyPDF2
+pymongo
+python-dotenv
