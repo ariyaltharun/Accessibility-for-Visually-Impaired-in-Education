@@ -1,6 +1,7 @@
 import logging
 from time import sleep
 import speech_recognition as sr
+import streamlit as st
 
 from utils import listen, speak
 from Actions.LectureManager import record_lectures, replay_lecture
@@ -62,17 +63,14 @@ def main() -> None:
     global exit
     global button_click
 
-    while not exit:
-        button_click = int(input("Enter 1 to turn mic on or 0 to turn mic off\n").strip())
-    
-        if button_click:
-            speak("How can I help you?")
-            user_text = listen()
-            system_text = actions(user_text)
-            speak(system_text)
+    button = st.button(label="On Microphone")
 
-            button_click = False
-        
+    if button:
+        speak("How can I help you?")
+        user_text = listen()
+        system_text = actions(user_text)
+        speak(system_text)
+
 
 if __name__ == "__main__":
     main()
