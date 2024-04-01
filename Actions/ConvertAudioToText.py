@@ -1,7 +1,4 @@
-from gtts import gTTS
-from io import BytesIO
 import logging
-import pygame
 import speech_recognition as sr
 
 
@@ -17,10 +14,22 @@ button_click: bool = False
 exit: bool = False
 
 
-def main() -> None:
-    global exit
-    global button_click
+def convert_audio_to_text(audio_file) -> None:
+    r = sr.Recognizer()
 
+    file_audio = sr.AudioFile('RecordedLectures/'+audio_file)
+
+    with file_audio as source:
+        audio_text = r.record(source)
+
+    print(type(audio_text))
+    print(r.recognize_google(audio_text))
+
+    with open("recognizedSpeech/new_file.txt", "w") as file:
+        file.write(r.recognize_google(audio_text))
+        
+
+if __name__ == "__main__":
     # thread = Thread(target=take_input)
     # thread.start()
 
@@ -30,21 +39,4 @@ def main() -> None:
         if button_click==0:
             exit
         elif button_click:
-            r = sr.Recognizer()
-
-            file_audio = sr.AudioFile('RecordedLectures\output.wav')
-
-            with file_audio as source:
-                audio_text = r.record(source)
-
-            print(type(audio_text))
-            print(r.recognize_google(audio_text))
-
-            with open("recognizedSpeech/new_file.txt", "w") as file:
-                file.write(r.recognize_google(audio_text))
-
-            button_click = False
-        
-
-if __name__ == "__main__":
-    main()
+             convert_audio_to_text('output.wav')
