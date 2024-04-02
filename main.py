@@ -114,12 +114,14 @@ def main() -> None:
             data_url = base64.b64encode(contents).decode("utf-8")
             file_.close()
 
-            st.markdown(
+            visualize_listening_container = st.empty()
+            visualize_listening_container.markdown(
                 f'<img src="data:image/gif;base64,{data_url}" width=200 alt="listening gif">',
                 unsafe_allow_html=True,
             )
             st.write("Listening...")
             user_text = listen()
+            visualize_listening_container.empty()
         # Add assistant response to chat history
         st.session_state.messages.append({"role": "assistant", "content": response})
 
