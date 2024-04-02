@@ -4,6 +4,7 @@ import os
 import wave
 import speech_recognition as sr
 from dotenv import load_dotenv
+import streamlit as st
 
 from .Summarize import summarize
 from utils import store, load, speak, listen
@@ -79,20 +80,28 @@ def convertAudioToText(recorded_audio: str):
 
 
 def replay_lecture(wave_file_name: str) -> None:
-    data = {'file_name': wave_file_name}
-    req_data: dict | None = load(os.getenv('MONGO_URL'), "recordings", data)
+    # data = {'file_name': wave_file_name}        
+    # req_data: dict | None = load(os.getenv('MONGO_URL'), "recordings", data)
+
+    # req_data = "./recognizedSpeech/"+wave_file_name.replace(" ", "_")+".txt"
+    req_data = "./recognizedSpeech/new_file.txt"
     if not req_data:
         speak("Lecture not found")
         return
     
-    speak("Would you prefer listening to full lecture or summerized lecture?")
-    user_choice: str = listen()
-    if "full lecture" in user_choice:
-        speak(req_data['text'])
-    elif "summarised lecture" in user_choice:
-        speak(req_data['summerized_text'])
+    file_contents: str = open(req_data, 'r')
+    file_contents = file_contents.read()
+    with st.chat_message("assistant"):
+        st.write(f"file contents are:\n{file_contents}")
+        speak(file_contents)
+    # speak("Would you prefer listening to full lecture or summarized lecture?")
+    # user_choice: str = listen()
+    # if "full lecture" in user_choice:
+    #     speak(req_data['text'])
+    # elif "summarized lecture" in user_choice:
+    #     speak(req_data['summarized_text'])
     
-    return
+    # return
 
 
 if __name__ == "__main__":

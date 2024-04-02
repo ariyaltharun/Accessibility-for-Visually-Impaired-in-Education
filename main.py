@@ -56,15 +56,24 @@ def actions(user_text) -> None:
         # TODO: replay Lectures function
         # Search a lecture based on user_query(name of lecture) in the database
         # Play the lecture
-        speak("Started Replaying Lectures")
-        sleep(0.5)
-        speak("Tell the file name")
+        with st.chat_message("assistant"):
+            st.write("Started Replaying Lectures.")
+            speak("Started Replaying Lectures")
+            sleep(0.5)
+            st.write("Which lecture do you want to listen to, again?")
+            speak("Which lecture do you want to listen to, again?")
+
         user_response: str = listen()
+        with st.chat_message("user"):
+            st.write(user_response)
+
         replay_lecture(user_response.replace(" ", "_"))
         pass
     elif "scribe" in user_text.lower():
         # TODO: scribe function
-        speak("Started Acting as a scribe")
+        with st.chat_message("assistant"):
+            speak("Started Acting as a scribe")
+            st.write("Started Acting as a scribe.")
         sleep(1)
         scribe()
         pass
@@ -136,3 +145,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+# Reference:
+# https://docs.streamlit.io/knowledge-base/tutorials/build-conversational-apps

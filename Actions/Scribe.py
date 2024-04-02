@@ -2,7 +2,7 @@ import PyPDF2
 import logging
 from utils import listen, speak
 from time import sleep
-
+import streamlit as st
 
 # Make a get request to download pdf question paper 
 # or get qp when teacher uploads qp to website
@@ -78,14 +78,19 @@ def fillAnswers(question_answer_list: list[dict]) -> list[dict]:
     while question_no != len(question_answer_list):
         # Say the question to user
         logging.info("Saying the question")
-        speak(question_answer_list[question_no]['Question'])
-        # Sleep for few seconds
-        sleep(0.5)
+        with st.chat_message("assistant"):
+            speak(question_answer_list[question_no]['Question'])
+            st.write(question_answer_list[question_no]['Question'])
+            # Sleep for few seconds
+            sleep(0.5)
+            # Ask whether user to repeat the question or wants to answer
+            logging.info("Asking to repeat the question")
+            st.write("Do you want to repeat the question?")
+            speak("Do you want to repeat the question?")
 
-        # Ask whether user to repeat the question or wants to answer
-        logging.info("Asking to repeat the question")
-        speak("Do u want to repeat the question")
         user_answer: str = listen() # Start recording and convert to text
+        with st.chat_message("user"):
+            st.write(user_answer)
         if "Yes" in user_answer:
             speak("Repeating the question again, listen carefully")
             # Maybe sleep for few seconds 
