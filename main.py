@@ -23,13 +23,19 @@ exit: bool = False
 
 # def response_generator():
 
+# gif from local file
+file_ = open("listen.gif", "rb")
+contents = file_.read()
+data_url = base64.b64encode(contents).decode("utf-8")
+file_.close()
+
 
 def actions(user_text) -> None:
     global exit
     if not user_text:
         return
     
-    if "record lectures" in user_text:
+    if "record lectures" in user_text.lower():
         # TODO: Record Lectures function
         # Start recording the lectures by activating certain devices e.g,. microphone
         # Give a name to the lecture
@@ -41,7 +47,16 @@ def actions(user_text) -> None:
             st.write("What would you name this lecture?")
             speak("What would you name this lecture?")
 
+        visualize_listening_container = st.empty()
+        listening_text_container = st.empty()
+        visualize_listening_container.markdown(
+            f'<img src="data:image/gif;base64,{data_url}" width=200 alt="listening gif">',
+            unsafe_allow_html=True,
+        )
+        listening_text_container.write("Listening...")
         filename = listen()
+        visualize_listening_container.empty()
+        listening_text_container.empty()        
         with st.chat_message("user"):
             st.write(filename)
         st.session_state.messages.append({"role": "user", "content": filename})
@@ -52,7 +67,7 @@ def actions(user_text) -> None:
         filename = filename.replace(" ", "_") + ".wav"
         record_lectures(filename)
         pass
-    elif "replay lectures" in user_text:
+    elif "replay lecture" in user_text.lower():
         # TODO: replay Lectures function
         # Search a lecture based on user_query(name of lecture) in the database
         # Play the lecture
@@ -63,7 +78,17 @@ def actions(user_text) -> None:
             st.write("Which lecture do you want to listen to, again?")
             speak("Which lecture do you want to listen to, again?")
 
+        visualize_listening_container = st.empty()
+        listening_text_container = st.empty()
+        visualize_listening_container.markdown(
+            f'<img src="data:image/gif;base64,{data_url}" width=200 alt="listening gif">',
+            unsafe_allow_html=True,
+        )
+        listening_text_container.write("Listening...")
         user_response: str = listen()
+        visualize_listening_container.empty()
+        listening_text_container.empty()    
+
         with st.chat_message("user"):
             st.write(user_response)
 
@@ -77,8 +102,10 @@ def actions(user_text) -> None:
         sleep(1)
         scribe()
         pass
-    elif "exit" in user_text:
-        speak("Program exiting")
+    elif "exit" in user_text.lower():
+        with st.chat_message("assistant"):
+            speak("Program exiting")
+            st.write("Program exiting.")
         exit = True
         pass
 
@@ -87,7 +114,7 @@ def main() -> None:
     global exit
     global button_click
 
-    st.title("Education for Visually Impaired")
+    st.title("Accessible Education for Visually Impaired")
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -108,20 +135,18 @@ def main() -> None:
         with st.chat_message("assistant"):
             response = st.write("How can I help you?")
             speak("How can I help you?")
-            # gif from local file
-            file_ = open("listen.gif", "rb")
-            contents = file_.read()
-            data_url = base64.b64encode(contents).decode("utf-8")
-            file_.close()
+
 
             visualize_listening_container = st.empty()
+            listening_text_container = st.empty()
             visualize_listening_container.markdown(
                 f'<img src="data:image/gif;base64,{data_url}" width=200 alt="listening gif">',
                 unsafe_allow_html=True,
             )
-            st.write("Listening...")
+            listening_text_container.write("Listening...")
             user_text = listen()
             visualize_listening_container.empty()
+            listening_text_container.empty()
         # Add assistant response to chat history
         st.session_state.messages.append({"role": "assistant", "content": response})
 

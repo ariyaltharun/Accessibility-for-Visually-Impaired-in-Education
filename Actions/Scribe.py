@@ -3,6 +3,13 @@ import logging
 from utils import listen, speak
 from time import sleep
 import streamlit as st
+import base64
+
+# gif from local file
+file_ = open("listen.gif", "rb")
+contents = file_.read()
+data_url = base64.b64encode(contents).decode("utf-8")
+file_.close()
 
 # Make a get request to download pdf question paper 
 # or get qp when teacher uploads qp to website
@@ -77,33 +84,65 @@ def fillAnswers(question_answer_list: list[dict]) -> list[dict]:
     question_no = 0
     while question_no != len(question_answer_list):
         # Say the question to user
-        logging.info("Saying the question")
+        logging.info("Dictating the question")
         with st.chat_message("assistant"):
             speak(question_answer_list[question_no]['Question'])
             st.write(question_answer_list[question_no]['Question'])
             # Sleep for few seconds
             sleep(0.5)
             # Ask whether user to repeat the question or wants to answer
-            logging.info("Asking to repeat the question")
-            st.write("Do you want to repeat the question?")
-            speak("Do you want to repeat the question?")
+            logging.info("Asking if question must be repeated.")
+            st.write("Do you want the question to be repeated?")
+            speak("Do you want the question to be repeated?")
 
-        user_answer: str = listen() # Start recording and convert to text
+        # Start recording and convert to text
+        visualize_listening_container = st.empty()
+        listening_text_container = st.empty()
+        visualize_listening_container.markdown(
+            f'<img src="data:image/gif;base64,{data_url}" width=200 alt="listening gif">',
+            unsafe_allow_html=True,
+        )
+        listening_text_container.write("Listening...")
+        user_answer: str = listen()
+        visualize_listening_container.empty()
+        listening_text_container.empty()  
+
         with st.chat_message("user"):
             st.write(user_answer)
+            
         if "Yes" in user_answer:
             speak("Repeating the question again, listen carefully")
             # Maybe sleep for few seconds 
             sleep(0.5)
             continue
 
-        speak("Please say your answer")
-        user_answer: str = listen() # Start recording the answer for the question and convert to text
+        speak("Please tell your answer")
+        # Start recording the answer for the question and convert to text
+        visualize_listening_container = st.empty()
+        listening_text_container = st.empty()
+        visualize_listening_container.markdown(
+            f'<img src="data:image/gif;base64,{data_url}" width=200 alt="listening gif">',
+            unsafe_allow_html=True,
+        )
+        listening_text_container.write("Listening...")
+        user_answer: str = listen()
+        visualize_listening_container.empty()
+        listening_text_container.empty()  
 
         # confirm whether user satisfied with answer
         logging.info("Asking user whether satisfied or repeat the answer")
         speak("Are you satisfied with answer or do you want to repeat the answer")
+        visualize_listening_container = st.empty()
+        listening_text_container = st.empty()
+        visualize_listening_container.markdown(
+            f'<img src="data:image/gif;base64,{data_url}" width=200 alt="listening gif">',
+            unsafe_allow_html=True,
+        )
+        listening_text_container.write("Listening...")
         user_confirmation: str = listen()
+        visualize_listening_container.empty()
+        listening_text_container.empty()  
+
         if "satisfied" in user_confirmation:
             logging.info("User confirmed")
             question_answer_list[question_no]['Answer'] = user_answer
@@ -119,7 +158,18 @@ def fillAnswers(question_answer_list: list[dict]) -> list[dict]:
             # Maybe Sleep for 0.5 seconds
             sleep(0.5)
             speak("Do you want change the answer?")
+
+            visualize_listening_container = st.empty()
+            listening_text_container = st.empty()
+            visualize_listening_container.markdown(
+                f'<img src="data:image/gif;base64,{data_url}" width=200 alt="listening gif">',
+                unsafe_allow_html=True,
+            )
+            listening_text_container.write("Listening...")
             user_confirmation: str = listen()
+            visualize_listening_container.empty()
+            listening_text_container.empty()  
+
             if "yes" in user_confirmation:
                 speak("Please listen the question again and answer correctly")
                 continue
