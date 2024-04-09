@@ -1,0 +1,1 @@
+client = pymongo.MongoClient("mongodb+srv://test:test@cluster0.lnvvyxl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")

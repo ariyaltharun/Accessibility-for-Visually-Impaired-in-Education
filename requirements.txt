@@ -5,3 +5,6 @@ pygame
 PyPDF2
 pymongo
 python-dotenv
+pdfplumber
+re
+streamlit
