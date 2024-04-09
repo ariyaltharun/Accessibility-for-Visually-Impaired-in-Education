@@ -40,15 +40,20 @@ def extract_questions_and_store(pdf_file, subject, class_name):
     collection.insert_one(document)
     return questions
 
-st.title("Teachers Portal to Upload the Question Papers")
-subject = st.text_input("Enter the subject:")
-class_name = st.text_input("Enter the class:")
-uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
+# Streamlit UI
+def main():
+    st.title("PDF Question Extractor and MongoDB Storer")
+    subject = st.text_input("Enter the subject:")
+    class_name = st.text_input("Enter the class:")
+    uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
     
-if uploaded_file is not None:
-    if st.button("Submit"):
-        questions = extract_questions_and_store(uploaded_file, subject, class_name)
-        st.success("Questions extracted and stored successfully in MongoDB!")
-        st.write("Extracted Questions:")
-        for question in questions:
-            st.write(question)
+    if uploaded_file is not None:
+        if st.button("Submit"):
+            questions = extract_questions_and_store(uploaded_file, subject, class_name)
+            st.success("Questions extracted and stored successfully in MongoDB!")
+            st.write("Extracted Questions:")
+            for question in questions:
+                st.write(question)
+
+if __name__ == "__main__":
+    main()
