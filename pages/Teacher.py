@@ -2,9 +2,11 @@ import streamlit as st
 import pymongo
 import pdfplumber
 import re
+import os
+from dotenv import load_dotenv
 
 # Connect to MongoDB
-client = pymongo.MongoClient("mongodb+srv://test:test@cluster0.lnvvyxl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+client = pymongo.MongoClient(os.getenv('MONGO_URL'))
 db = client["pdf_database"]
 collection = db["pdf_collection"]
 
