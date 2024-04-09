@@ -7,6 +7,8 @@ import base64
 import speech_recognition as sr
 from dotenv import load_dotenv
 import streamlit as st
+import requests
+import json
 
 from .Summarize import summarize
 from utils import store, load, speak, listen
@@ -63,6 +65,26 @@ def record_lectures(file_name: str) -> None:
 
     text = convertAudioToText(WAVE_OUTPUT_FILENAME)
     summarized_text = summarize(text)
+    
+
+    ############################# Text Enhancement ################################
+    URL = "<PASTE-URL-GENERATED-IN-COLAB>/text_enhance"
+    data = {
+        "text": text,
+        "summary_text": summarized_text,
+        "lan": "en",
+        "len_limit": 1000
+    }
+    response = requests.post(
+        URL,
+        json=data
+    )
+    if response.ok:
+        data = json.loads(response.content)
+        text = data["text"]
+        summarized_text = data["summary_text"]
+    ##############################################################################
+
     data = {
         'file_name': WAVE_OUTPUT_FILENAME[:-4],
         'text': text,
