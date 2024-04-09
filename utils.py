@@ -4,6 +4,7 @@ import pygame
 from gtts import gTTS
 from io import BytesIO
 from pymongo import MongoClient
+import streamlit as st
 
 
 recognizer = sr.Recognizer()
@@ -21,10 +22,13 @@ def listen() -> str | None:
             return str(recognizer.recognize_google(audio))
         except sr.WaitTimeoutError:
             logging.error("Timeout, please press the button and speak again")
+            st.write("Timeout, please press the button and speak again")
         except sr.UnknownValueError:
             logging.error("Couldn't listen properly")
+            st.write("Couldn't listen properly")
         except sr.RequestError as e:
             logging.error("Error calling Google Speech Recognition service; {0}".format(e))
+            st.write("Error calling Google Speech Recognition service; {0}".format(e))
 
 
 def speak(system_text) -> None:

@@ -1,1 +1,4 @@
-# Augmented Accessibility for Visually Impaired Education
+# Accessible Education for Visually Impaired
+
+### To run the project:
+- write streamlit run Main.py
